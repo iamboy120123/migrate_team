@@ -33,7 +33,9 @@
     "origin_master_repository_id": 0,
     "origin_work_repository_id": 11,
     "work_user": "DSSDEV",
-    "variables": [
+    "variables": [],
+    "work_repo_schema": "SYSTEM",
+    "variables_removed_20261029": [
       {
         "name": "v_max_partition",
         "datatype": "N",
@@ -41,10 +43,8 @@
         "store": "L",
         "logical_schema": "DSS_ODI_LOG",
         "refresh_query": "SELECT NVL(MAX(partition_minute), 0) FROM tb_staging_ss_esim_landing_to_discovery_workflow_status",
-        "replaces_tasks": [
-          "000000"
-        ],
-        "note": "partition_minute ล่าสุดของ landing (0 = landing ว่าง) — สร้างโดย Setup.ps1"
+        "replaces_tasks": [],
+        "note": "partition_minute ล่าสุดของ landing (0 = landing ว่าง) — สร้างโดย Setup.ps1 · replaces_tasks 000000 ถอดออก 2026-10-28 (I12: 000000 = placeholder ใน step chain)"
       },
       {
         "name": "v_lag_minutes",
@@ -55,8 +55,7 @@
         "refresh_query": "SELECT NVL(ROUND((SYSDATE - TO_DATE(TO_CHAR(MAX(partition_minute)), 'YYYYMMDDHH24MI')) * 1440), 999999) FROM tb_staging_ss_esim_landing_to_discovery_workflow_status",
         "note": "lag (นาที) ของ landing ล่าสุด; 999999 = landing ว่าง — Evaluate step (<= 120) รอ sample จาก Studio"
       }
-    ],
-    "work_repo_schema": null
+    ]
   },
   "ai_review": {
     "model": "claude-sonnet-4-5",
@@ -77,5 +76,7 @@
     "landing_table": "tb_staging_ss_esim_landing_to_discovery_workflow_status",
     "landing_column_map": {},
     "note": "landing_column_map = คอลัมน์ landing -> คอลัมน์ target ที่รับค่าตรง (เติมหลัง Phase 4)"
-  }
+  },
+  "schema_mode": "odiref",
+  "concat_policy": "spark_null"
 }

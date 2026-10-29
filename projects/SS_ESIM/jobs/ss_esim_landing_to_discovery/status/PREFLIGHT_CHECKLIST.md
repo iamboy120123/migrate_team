@@ -1,16 +1,16 @@
 # Pre-flight Checklist — SS_ESIM_L2D
 
-Updated by Setup.ps1 on 2026-10-28 · passed **2/5** · update by running `Setup.ps1 -Mode InPlace` in this folder, or edit the table (✅ / ⬜)
+Updated by Setup.ps1 on 2026-10-28 · passed **5/5** · update by running `Setup.ps1 -Mode InPlace` in this folder, or edit the table (✅ / ⬜)
 
 README / Runbook Phase 0: **do not run `extract_workflow.py` (Phase 1) on real data until all items pass.**
 
 | # | Status | Item | Note | Checked by |
 |---|---|---|---|---|
 | 1 | ✅ | Automation scripts are ready and pass the smoke test | smoke test passed | Setup.ps1 (auto) |
-| 2 | ⬜ | ODI Topology in the target repository has JDBC URL + user/password set on the data server (not in the export) — logical schema 'DSS_ODI_LOG' / context 'DEV' / login 'DSSDEV' (from Smart Export) | pending | SA |
-| 3 | ⬜ | Target Oracle schema / DDL is ready in DSSDEV (else use output/ddl from Phase 6) | pending | SA |
+| 2 | ✅ | ODI Topology in the target repository has JDBC URL + user/password set on the data server (not in the export) — logical schema 'DSS_ODI_LOG' / context 'DEV' / login 'DSSDEV' (from Smart Export) | Test Connection ผ่าน (SA ยืนยันในแชต) · P1: login DSSDEV = work user | SA ✅ SA 2026-10-29 @mana-ma |
+| 3 | ✅ | Target Oracle schema / DDL is ready in DSSDEV (else use output/ddl from Phase 6) | P3 rp00_preflight_20261028: ตาราง 9 ตัวของงานมีครบใน DSSDEV | SA ✅ SA 2026-10-29 @mana-ma |
 | 4 | ✅ | The real Blendata workflow export (.json) is in input/blendata/ | input/blendata/export_workflow.json | Setup.ps1 (auto) |
-| 5 | ⬜ | DBA is informed + privileges for ODI Smart Import | pending | SA |
+| 5 | ✅ | DBA is informed + privileges for ODI Smart Import | P2: DSSDEV มี role DBA · team.json smart_import_rights=true · SA ยืนยัน DBA รับทราบ | SA ✅ SA 2026-10-29 @mana-ma |
 
 ## ก่อนเข้า G4 (ไม่นับใน 5/5)
 

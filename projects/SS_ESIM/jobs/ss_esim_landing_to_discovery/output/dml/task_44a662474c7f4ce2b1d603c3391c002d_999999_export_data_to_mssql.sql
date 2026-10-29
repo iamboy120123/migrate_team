@@ -1,0 +1,19 @@
+-- ============================================================
+-- ODI Procedure Body: task_44a662474c7f4ce2b1d603c3391c002d_999999_export_data_to_mssql
+-- Target Table      : (SQL Server via JDBC - not Oracle)
+-- Generated         : 2026-10-28T15:26:18 (manual placeholder, I12)
+-- Strategy          : placeholder no-op SELECT FROM DUAL (I12 option 1; BEGIN NULL END has no SqlIndGrp in reference)
+-- ============================================================
+
+-- @@ODI_STEP: STEP_1_PLACEHOLDER_NOOP
+-- PLACEHOLDER - no data change. Original Blendata task kept for reference:
+-- Blendata task : 999999_export_data_to_mssql (serviceTemplate = service-job-export, exportType = jdbc, dbPlatform = sqlserver)
+-- Original role  : export rows of tb_transaction_ss_esim_valid (last 7 days, newer than MSSQL checkpoint) to SQL Server
+-- Original SQL (verbatim, Spark):
+--   select cdr_id,cdr_type,partner,owner,iccid,first_installed,profile_type,eid,sim_type,cp_id,service_id,before_sharing,price_rate_type,network_type,invoicing_co_id,share_basis,cdr_filename,chk_duplicate,filter_dtm,create_by,remap_dtm,remap_by,process_date,transaction_units,status,workflow_process_date,now() as bld_export_date,file_date from tb_transaction_ss_esim_valid where workflow_process_date > date_format(now()-interval 7 day,'yyyyMMddHHmmss') and workflow_process_date > (select coalesce(max_workflow_process_date_mssql,'00000000000000') as max_workflow_process_date_mssql from ext_dss_checkpoint_tb_transaction_ss_esim_valid)
+-- Why not converted: no SQL Server data server in Topology of reference Smart Export (DEV);
+--                    checkpoint table ext_dss_checkpoint_tb_transaction_ss_esim_valid not found in DSSDEV
+--                    (DSSDEV has ext_dss_checkpoint_tb_txn_valid - not confirmed as same object)
+-- Impact        : valid rows are NOT exported to SQL Server automatically
+-- SA decision   : I12 option 1 - placeholder, OPEN ITEM waiting for SQL Server connection (2026-10-28 @mana-ma)
+SELECT 'PLACEHOLDER_NOOP' AS placeholder FROM DUAL;

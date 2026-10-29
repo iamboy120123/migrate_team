@@ -454,7 +454,7 @@ def result_csvs(need: set):
             rows = list(csv.DictReader(io.StringIO(p.read_text(encoding="utf-8-sig", errors="replace"))))
         except Exception:
             continue
-        rows = [{(k or "").strip().upper(): (v or "").strip() for k, v in r.items()} for r in rows]
+        rows = [{(k or "").strip().upper(): (v if isinstance(v, str) else ",".join(v or [])).strip() for k, v in r.items() if k is not None} for r in rows]  # K5: แถวที่มีคอลัมน์เกิน header (restkey) / ไฟล์ที่ไม่ใช่ CSV ปกติ
         if rows and need <= set(rows[0]):
             out.append((p, rows))
     return out

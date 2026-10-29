@@ -104,14 +104,14 @@ def main():
     xml = rd(ROOT / "output/odi_export/PROJ_EXPORT.xml")
     rows, todo, totals = [], [], {"✅": 0, "🟡": 0, "⛔": 0}
     for f in files:
-        stem, tid = f.stem, f.stem.split("_")[0]
+        stem, tid = f.stem, "_".join(f.stem.split("_")[:2])  # K6: เดิม split[0] = "task" -> flag ของทุก task ปนกัน
         mine = lambda cells: cells and (cells[0] == stem or cells[0] == tid or cells[0].startswith(tid + "_"))
         fl = [c for c in flags if mine(c) and c[0] != "Task ID"]
         lg = [c for c in log if mine(c) and c[0] != "Task"]
         # ①–③
         bad13, warn13 = [], []
         for c in fl:
-            if c[-1].upper() not in ("RESOLVED", "WAIVED"):
+            if not c[-1].upper().startswith(("RESOLVED", "WAIVED")):  # K6: รับ "RESOLVED (เหตุผล)" ตามรูปแบบใน skill/convert
                 (bad13 if "CRITICAL" in c[1] else warn13).append("flag: " + c[1][:60])
         for c in lg:
             st = c[-1].upper()
@@ -128,7 +128,8 @@ def main():
         s4 = "⛔" if errs else ("🟡" if open_w else "✅")
         # ⑤
         dml_f = list(dml.glob(f"{tid}*.sql")) if dml.exists() else []
-        s5 = "–" if not dml_f else ("✅" if (not xml or tid in xml or stem in xml) else "⛔")
+        pname = stem.split("_", 2)[2] if stem.count("_") >= 2 else stem  # K6: ชื่อ procedure ใน XML = ตัด task_<id>_ ออก (proc_name_of)
+        s5 = "–" if not dml_f else ("✅" if (not xml or tid in xml or stem in xml or pname in xml) else "⛔")
         # ⑥ ⑦
         c6 = comp.get(stem)
         s6 = "–" if not c6 else ("✅" if c6[0] == "OK" else "⛔")

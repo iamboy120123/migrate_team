@@ -175,9 +175,19 @@ def check_ddl(cfg, raw):
         except (ValueError, OSError) as e:
             need("ddl", f"อ่าน {f.name} ไม่ได้: {e}", how)
     used = set()
-    for f in raw.glob("*.sql"):
-        used |= table_names_from_sql(f.read_text(encoding="utf-8", errors="replace"))
     manifest = ROOT / "output" / "dml" / "_manifest.json"
+    # K3 (2026-10-29): raw SQL ของ task ที่เป็น placeholder (I12, manifest "placeholder": true) ไม่ถูกรันใน package
+    #   -> ไม่ต้องมี DDL ของตารางที่อ้างในนั้น (SQL เดิมอยู่ใน comment เท่านั้น) · ต้องมี waiver ใน status/GATES.md
+    placeholder_ids = set()
+    if manifest.exists():
+        try:
+            placeholder_ids = {e["task_id"] for e in json.loads(manifest.read_text(encoding="utf-8")) if e.get("placeholder")}
+        except (json.JSONDecodeError, OSError, KeyError):
+            placeholder_ids = set()
+    for f in raw.glob("*.sql"):
+        if any(f.stem == t or f.stem.startswith(t) for t in placeholder_ids):
+            continue
+        used |= table_names_from_sql(f.read_text(encoding="utf-8", errors="replace"))
     if manifest.exists():
         try:
             for e in json.loads(manifest.read_text(encoding="utf-8")):

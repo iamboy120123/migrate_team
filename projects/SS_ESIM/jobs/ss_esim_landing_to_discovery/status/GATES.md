@@ -21,7 +21,7 @@
 ## Manual checklist
 
 ### G2
-- [ ] G2.M1 SA ตรวจ `status/PHASE4_REVIEW_LOG.md` แล้ว และทุกข้อที่เปลี่ยน semantics มี Q ที่ปิดแล้ว (หรือ semantic-verifier = PASS)
+- [x] G2.M1 SA ตรวจ `status/PHASE4_REVIEW_LOG.md` แล้ว และทุกข้อที่เปลี่ยน semantics มี Q ที่ปิดแล้ว (หรือ semantic-verifier = PASS) ✅ SA 2026-10-29 @mana-ma
 
 ### G4
 - [ ] G4.M1 Smart Import แบบ **Overwrite** สำหรับ procedure/package ที่เปลี่ยน และตรวจใน Studio ว่า code เป็นเวอร์ชันใหม่
@@ -49,3 +49,5 @@
 
 | ID | Gate | ข้อที่ยกเว้น | ขอบเขต / เงื่อนไข | อนุมัติโดย | สถานะ |
 |---|---|---|---|---|---|
+| W1 | /inputs (ddl) · G3 | DDL ของ `ext_dss_checkpoint_tb_transaction_ss_esim_valid` (ไม่มีใน DSSDEV — P3 MISSING_OBJECT) | ใช้เฉพาะ SQL ใน comment ของ placeholder `999999_export_data_to_mssql` (I12 ข้อ 1) ที่ไม่ถูกรัน · ทบทวนเมื่อจะทำ export SQL Server จริง · check_inputs ข้าม raw SQL ของ placeholder (K3) | ✅ SA 2026-10-29 @mana-ma | ACTIVE |
+| W2 | D-R7 (build_odi_export / G3) | `tb_staging_ss_esim_raw_temp` (040000): truncate_all ทั้งที่ Spark = Overwrite + partitions + DYNAMIC | As-Is = DYNAMIC (แทนเฉพาะวันนี้) + 080000 retention (`olderThan=-1`) ล้างหลังใช้ → ตารางมีเฉพาะรอบปัจจุบัน · ODI: 080000 = placeholder (I12) → truncate_all ให้ผลรวมเท่ากัน · 050x00 อ่านทั้งตาราง (delete_by_partition เฉย ๆ = แถวซ้ำข้ามวัน) · `PARTITIONS_EMPTY=Y` เพื่อผ่าน builder · ทบทวนถ้า 080000 ถูก implement จริง | ✅ SA 2026-10-29 @mana-ma | ACTIVE |
