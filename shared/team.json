@@ -1,6 +1,7 @@
 {
   "github": {
-    "mode": "a"
+    "mode": "a",
+    "lock_issue": 1
   },
   "db": {
     "ai_access": "human",
